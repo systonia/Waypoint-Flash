@@ -1,0 +1,28 @@
+{
+    "name": "systonia/waypoint-flash",
+    "description": "Flash messages for Waypoint: queue a message, redirect, show it once on the next page -- with or without JavaScript.",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.5",
+        "systonia/waypoint": "^1.4.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^13.3",
+        "phpstan/phpstan": "^2.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Waypoint\\Flash\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Waypoint\\Flash\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit --testdox",
+        "stan": "phpstan analyse"
+    }
+}

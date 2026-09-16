@@ -1,0 +1,17 @@
+.wp-flashes { position: relative; }
+.wp-flash {
+    display: flex; align-items: flex-start; gap: 12px;
+    margin: 12px 0; padding: 10px 14px; border-radius: 6px;
+    border: 1px solid; font-size: 14px; line-height: 1.4;
+}
+.wp-flash-text { flex: 1; }
+.wp-flash-dismiss { margin: 0; }
+.wp-flash-dismiss button {
+    background: none; border: none; cursor: pointer; font-size: 18px; line-height: 1;
+    color: inherit; padding: 0 2px;
+}
+.wp-flash-success { background: #eefbea; border-color: #b7e2a8; color: #22521a; }
+.wp-flash-info    { background: #ecf4fb; border-color: #b6d3ec; color: #1c3f5e; }
+.wp-flash-warning { background: #fff7e6; border-color: #f0d49a; color: #5e4310; }
+.wp-flash-error   { background: #fdecec; border-color: #f0b4b4; color: #6a1a1a; }
+.wp-flash:focus { outline: 2px solid currentColor; outline-offset: 2px; }
