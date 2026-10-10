@@ -4,7 +4,7 @@ namespace Waypoint\Flash\Tests;
 
 use Waypoint\Attributes\{Controller, Get, Inject, Post, SkipCsrf};
 use Waypoint\Flash\Flash;
-use Waypoint\Http\{Redirect, Request, View};
+use Waypoint\Http\{Redirect, View};
 
 #[Controller]
 #[SkipCsrf]
@@ -28,16 +28,16 @@ class FlashController
     }
 
     #[Get('/page')]
-    public function page(Request $req): View
+    public function page(): View
     {
-        return new View('Page', partial: $req->acceptPartial);
+        return new View('Page');
     }
 
     #[Get('/now')]
-    public function now(Request $req): View
+    public function now(): View
     {
         $this->flash->info('Right away');
-        return new View('Page', partial: $req->acceptPartial);
+        return new View('Page');
     }
 
     #[Get('/api')]

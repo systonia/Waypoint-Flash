@@ -14,9 +14,6 @@ class FlashOptions
     /** Cookie Secure attribute; false only for HTTP-only local development. */
     public bool $cookieSecure = true;
 
-    /** The wp-container key of the region `$this->flashes()` renders and partial responses target. */
-    public string $container = 'flash';
-
     /** Path of the no-JS dismiss endpoint (POST). */
     public string $dismissPath = '/flash/dismiss';
 

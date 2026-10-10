@@ -10,25 +10,19 @@ final class FlashRenderer
     }
 
     /**
-
-     * The live region the layout renders: `<div wp-container="flash" ...>` with the messages inside.
-
+     * The live region the layout renders: `<div class="wp-flashes" aria-live="polite">` with the messages inside.
      * @param list<array{type: string, text: string}> $messages
-
      */
     public function region(array $messages): string
     {
-        return sprintf('<div wp-container="%s" class="wp-flashes" aria-live="polite">%s</div>', htmlspecialchars($this->options->container, ENT_QUOTES), $this->messages($messages));
+        return sprintf('<div class="wp-flashes" aria-live="polite">%s</div>', $this->messages($messages));
     }
 
     /**
-
-     * Just the message blocks -- what a partial response ships as an out-of-band fragment.
-
+     * One block per message, each with its dismiss form.
      * @param list<array{type: string, text: string}> $messages
-
      */
-    public function messages(array $messages): string
+    private function messages(array $messages): string
     {
         $html = '';
         foreach ($messages as $message) {

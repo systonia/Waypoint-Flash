@@ -1,10 +1,9 @@
-// waypoint-flash: dismiss on click, auto-hide, focus an error after a swap.
+// waypoint-flash: dismiss on click, auto-hide, focus an error on page load.
 // Everything here is an enhancement: without it the dismiss form posts to the
 // server and messages simply stay until the next page.
 (() => {
     const arm = () => {
-        for (const el of document.querySelectorAll('.wp-flash[data-timeout]:not([data-armed])')) {
-            el.setAttribute('data-armed', '1');
+        for (const el of document.querySelectorAll('.wp-flash[data-timeout]')) {
             const ms = Number(el.getAttribute('data-timeout'));
             if (ms > 0) setTimeout(() => el.remove(), ms);
         }
@@ -20,6 +19,5 @@
         el.closest('.wp-flash')?.remove();
     });
 
-    Waypoint.onNavigated(arm);
     arm();
 })();

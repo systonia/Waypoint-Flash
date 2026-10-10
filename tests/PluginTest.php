@@ -52,17 +52,6 @@ final class PluginTest extends TestCase
             ->assertSee('class="wp-flash wp-flash-error" role="alert"><span');
     }
 
-    public function testAPartialNavigationGetsTheMessagesAsAnOutOfBandFragment(): void
-    {
-        $this->boot();
-        $cookie = $this->post('/save')->cookie('flash');
-
-        $partial = $this->request('GET', '/page')->asPartial()->withCookie('flash', (string) $cookie)->send()->assertOk();
-        $partial->assertSee('<template wp-swap-oob="flash"><div class="wp-flash wp-flash-success"')
-            ->assertDontSee('<html');
-        $this->assertSame('', $partial->cookie('flash'));
-    }
-
     public function testARedirectOrJsonResponseNeverConsumesTheMessage(): void
     {
         $this->boot();
@@ -72,7 +61,7 @@ final class PluginTest extends TestCase
         $api->assertDontSee('wp-flash');
         $this->assertStringContainsString('Saved', self::decode((string) $api->cookie('flash')), 'still waiting for an HTML page, re-sent with a fresh TTL');
 
-        $again = $this->request('POST', '/fail')->asPartial()->withCookie('flash', $cookie)->send()->assertRedirect('/page');
+        $again = $this->request('POST', '/fail')->withCookie('flash', $cookie)->send()->assertRedirect('/page');
         $this->assertStringContainsString('Nope', self::decode((string) $again->cookie('flash')), 'the new message is added, nothing is rendered into the redirect');
         $this->assertStringContainsString('Saved', self::decode((string) $again->cookie('flash')));
     }

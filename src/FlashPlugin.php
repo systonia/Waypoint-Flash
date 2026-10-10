@@ -3,16 +3,14 @@
 namespace Waypoint\Flash;
 
 use Waypoint\Container;
-use Waypoint\Http\{Request, Response};
-use Waypoint\Plugin\{ClientAsset, PluginBase, ResponseHook, ViewHelper};
+use Waypoint\Plugin\{ClientAsset, PluginBase, ViewHelper};
 
 /**
  * Register with `$app->plugin(new FlashPlugin())`. Adds the `Flash` service
- * (#[Inject]-able), `$this->flashes()` for the layout, a partial-response
- * out-of-band fragment so waypoint.js navigations show messages too, the
- * no-JS dismiss endpoint, and the client script/CSS.
+ * (#[Inject]-able), `$this->flashes()` for the layout, the no-JS dismiss
+ * endpoint, and the client script/CSS.
  */
-final class FlashPlugin extends PluginBase implements ViewHelper, ResponseHook, ClientAsset
+final class FlashPlugin extends PluginBase implements ViewHelper, ClientAsset
 {
     private Flash $flash;
     private FlashOptions $options;
@@ -46,16 +44,6 @@ final class FlashPlugin extends PluginBase implements ViewHelper, ResponseHook, 
     public function helpers(): array
     {
         return ['flashes' => fn(): string => $this->renderer->region($this->flash->pull())];
-    }
-
-    /** A partial HTML page (a waypoint.js navigation) gets the messages appended as `<template wp-swap-oob>`; the layout isn't rendered there, so nothing else would show them. */
-    public function after(array $plan, Request $req, Response $res): void
-    {
-        if (!$req->acceptPartial || $res->getStatus() !== 200 || !str_starts_with($res->getHeader('Content-Type') ?? '', 'text/html')) {
-            return;
-        }
-        $messages = $this->flash->pull();
-        $res->write(sprintf('<template wp-swap-oob="%s">%s</template>', htmlspecialchars($this->options->container, ENT_QUOTES), $this->renderer->messages($messages)));
     }
 
     public function assets(): array
