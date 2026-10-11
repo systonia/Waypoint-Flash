@@ -22,9 +22,9 @@ final class FlashPlugin extends PluginBase implements ViewHelper, ClientAsset
         return 'flash';
     }
 
-    public function boot(Container $container): void
+    public function boot(Container $container, FlashOptions $options): void
     {
-        $this->options = $container->get(FlashOptions::class);
+        $this->options = $options;
         $this->flash = new Flash();
         $this->renderer = new FlashRenderer($this->options);
         $this->cookie = new FlashCookie($this->options);
