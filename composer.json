@@ -2,7 +2,7 @@
     "name": "systonia/waypoint-flash",
     "description": "Flash messages for Waypoint: queue a message, redirect, show it once on the next page -- with or without JavaScript.",
     "type": "library",
-    "license": "MIT",
+    "license": ["MIT", "Apache-2.0"],
     "require": {
         "php": ">=8.5",
         "systonia/waypoint": "^1.4.1"

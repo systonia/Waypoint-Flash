@@ -58,3 +58,7 @@ messages carry no HTML.
 ```bash
 composer install && composer test && composer stan
 ```
+
+## License
+
+MIT or Apache-2.0, at your option.
