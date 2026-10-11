@@ -13,7 +13,7 @@ final class FlashMiddleware extends MiddlewareBase
 
     protected function before(Request $req, Response $res): bool
     {
-        $raw = $_COOKIE[$this->options->cookieName] ?? null;
+        $raw = $req->cookies[$this->options->cookieName] ?? null;
         $this->flash->load($this->cookie->read(is_string($raw) ? $raw : null));
         return true;
     }

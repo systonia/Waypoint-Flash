@@ -30,7 +30,7 @@ final class FlashEndpoint implements Endpoint
         if (!is_array($parts) || !isset($parts['path'])) {
             return '/';
         }
-        $host = $_SERVER['HTTP_HOST'] ?? null;
+        $host = $req->headers['Host'] ?? null;
         if (isset($parts['host']) && (!is_string($host) || strcasecmp($parts['host'] . (isset($parts['port']) ? ':' . $parts['port'] : ''), $host) !== 0)) {
             return '/';
         }
