@@ -33,15 +33,20 @@ Short unique name ('i18n'): the plan namespace for its route data, and the prefi
 ### boot()
 
 ```php
-public function boot(\Waypoint\Container $container, \Waypoint\Flash\FlashOptions $options): void
+public function boot(
+    \Waypoint\Container $container,
+    \Waypoint\Flash\FlashOptions $options,
+    \Waypoint\Options\CsrfOptions $csrf,
+): void
 ```
 
-Creates the Flash service and registers it in the container.
+Creates the Flash service and registers it in the container; CsrfOptions::$secret signs the cookie.
 
 **Parameters**
 
 - `$container` `\Waypoint\Container`
 - `$options` [`FlashOptions`](FlashOptions.md)
+- `$csrf` `\Waypoint\Options\CsrfOptions`
 
 ### middlewares()
 

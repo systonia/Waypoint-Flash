@@ -3,6 +3,7 @@
 namespace Waypoint\Flash;
 
 use Waypoint\Container;
+use Waypoint\Options\CsrfOptions;
 use Waypoint\Plugin\{ClientAsset, PluginBase, ViewHelper};
 
 /**
@@ -22,13 +23,13 @@ final class FlashPlugin extends PluginBase implements ViewHelper, ClientAsset
         return 'flash';
     }
 
-    /** Creates the Flash service and registers it in the container. */
-    public function boot(Container $container, FlashOptions $options): void
+    /** Creates the Flash service and registers it in the container; CsrfOptions::$secret signs the cookie. */
+    public function boot(Container $container, FlashOptions $options, CsrfOptions $csrf): void
     {
         $this->options = $options;
         $this->flash = new Flash();
         $this->renderer = new FlashRenderer($this->options);
-        $this->cookie = new FlashCookie($this->options);
+        $this->cookie = new FlashCookie($this->options, $csrf);
         $container->set($this->flash);
     }
 

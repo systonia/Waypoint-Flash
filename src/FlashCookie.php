@@ -5,7 +5,6 @@ namespace Waypoint\Flash;
 use Waypoint\Http\Response;
 use Waypoint\Options\CsrfOptions;
 use Waypoint\Support\{Arr, Base64Url};
-use Waypoint\Waypoint;
 
 /**
  * Encodes messages into the flash cookie and back: base64url(JSON), signed with
@@ -13,7 +12,7 @@ use Waypoint\Waypoint;
  */
 final class FlashCookie
 {
-    public function __construct(private FlashOptions $options)
+    public function __construct(private FlashOptions $options, private CsrfOptions $csrf)
     {
     }
 
@@ -67,7 +66,6 @@ final class FlashCookie
 
     private function secret(): ?string
     {
-        $csrf = Waypoint::getConfig(CsrfOptions::class);
-        return isset($csrf->secret) ? $csrf->secret : null;
+        return isset($this->csrf->secret) ? $this->csrf->secret : null;
     }
 }

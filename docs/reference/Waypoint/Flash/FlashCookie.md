@@ -19,12 +19,16 @@ CsrfOptions::$secret when one is configured so a forged cookie is ignored.
 ### __construct()
 
 ```php
-public function __construct(private \Waypoint\Flash\FlashOptions $options)
+public function __construct(
+    private \Waypoint\Flash\FlashOptions $options,
+    private \Waypoint\Options\CsrfOptions $csrf,
+)
 ```
 
 **Parameters**
 
 - `$options` [`FlashOptions`](FlashOptions.md)
+- `$csrf` `\Waypoint\Options\CsrfOptions`
 
 ### read()
 
