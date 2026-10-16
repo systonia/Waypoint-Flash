@@ -4,7 +4,7 @@ Flash messages for [Waypoint](https://github.com/Systonia/Waypoint): queue a mes
 the next page. Works without JavaScript; with `waypoint.js` it also auto-hides and can be dismissed
 in place.
 
-**Documentation:** [docs/](docs/index.md) — [guides](docs/guides/index.md) and the [reference](docs/reference/index.md).
+**Documentation:** [docs/](docs/index.md), with [guides](docs/guides/index.md) and the [reference](docs/reference/index.md).
 
 ## Setup
 

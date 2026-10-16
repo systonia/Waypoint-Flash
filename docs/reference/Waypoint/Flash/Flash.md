@@ -47,7 +47,7 @@ Queues a success message.
 
 **Parameters**
 
-- `$text` `string` — Plain text; it is escaped when rendered.
+- `$text` `string`: Plain text; it is escaped when rendered.
 
 ### info()
 
@@ -59,7 +59,7 @@ Queues an informational message.
 
 **Parameters**
 
-- `$text` `string` — Plain text; it is escaped when rendered.
+- `$text` `string`: Plain text; it is escaped when rendered.
 
 ### warning()
 
@@ -71,7 +71,7 @@ Queues a warning.
 
 **Parameters**
 
-- `$text` `string` — Plain text; it is escaped when rendered.
+- `$text` `string`: Plain text; it is escaped when rendered.
 
 ### error()
 
@@ -83,7 +83,7 @@ Queues an error: rendered with `role="alert"`, never hidden automatically, focus
 
 **Parameters**
 
-- `$text` `string` — Plain text; it is escaped when rendered.
+- `$text` `string`: Plain text; it is escaped when rendered.
 
 ### add()
 
@@ -95,8 +95,8 @@ Queues a message of the given type; a type not in TYPES becomes 'info'.
 
 **Parameters**
 
-- `$type` `string` — One of TYPES.
-- `$text` `string` — Plain text; it is escaped when rendered.
+- `$type` `string`: One of TYPES.
+- `$text` `string`: Plain text; it is escaped when rendered.
 
 ### load()
 

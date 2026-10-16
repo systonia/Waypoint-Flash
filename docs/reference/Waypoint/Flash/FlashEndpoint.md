@@ -1,6 +1,6 @@
 ---
 title: "FlashEndpoint"
-description: "POST {dismissPath}: the no-JavaScript dismiss -- drops every pending message and goes back to the referring page."
+description: "POST {dismissPath}: the no-JavaScript dismiss."
 order: 100
 generated: true
 ---
@@ -13,7 +13,7 @@ final class FlashEndpoint implements \Waypoint\Plugin\Endpoint
 
 Implements `Waypoint\Plugin\Endpoint`
 
-POST {dismissPath}: the no-JavaScript dismiss -- drops every pending message and goes back to the referring page.
+POST {dismissPath}: the no-JavaScript dismiss. It drops every pending message and goes back to the referring page.
 
 ## Methods
 

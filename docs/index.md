@@ -1,6 +1,6 @@
 ---
 title: Waypoint Flash
-description: Flash messages for Waypoint — queue a message, redirect, show it once on the next page.
+description: Flash messages for Waypoint: queue a message, redirect, show it once on the next page.
 order: 1
 ---
 

@@ -5,7 +5,7 @@ namespace Waypoint\Flash;
 use Waypoint\Http\{Redirect, Request, Response};
 use Waypoint\Plugin\Endpoint;
 
-/** POST {dismissPath}: the no-JavaScript dismiss -- drops every pending message and goes back to the referring page. */
+/** POST {dismissPath}: the no-JavaScript dismiss. It drops every pending message and goes back to the referring page. */
 final class FlashEndpoint implements Endpoint
 {
     public function __construct(private Flash $flash, private FlashOptions $options)

@@ -49,7 +49,7 @@ Creates the Flash service and registers it in the container.
 public function middlewares(): array
 ```
 
-**Returns** `list<callable>` — App-level middlewares, added at attach() in registration order.
+**Returns** `list<callable>`: App-level middlewares, added at attach() in registration order.
 
 ### hooks()
 
@@ -57,7 +57,7 @@ public function middlewares(): array
 public function hooks(): array
 ```
 
-**Returns** `list<object>` — Instances of Endpoint, Fallback, RouteAttributeCompiler, Guard, ResponseHook, ArgumentBinder, Renderer, OpenApiExtension, ViewHelper, ClientAsset.
+**Returns** `list<object>`: Instances of Endpoint, Fallback, RouteAttributeCompiler, Guard, ResponseHook, ArgumentBinder, Renderer, OpenApiExtension, ViewHelper, ClientAsset.
 
 ### helpers()
 
@@ -75,4 +75,4 @@ public function helpers(): array
 public function assets(): array
 ```
 
-**Returns** `array<string, string>` — {logical filename ending in .css or .js => absolute source path}
+**Returns** `array<string, string>`: {logical filename ending in .css or .js => absolute source path}

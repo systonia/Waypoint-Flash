@@ -38,7 +38,7 @@ Unknown types become 'info'; entries without a string type and text are dropped.
 
 **Parameters**
 
-- `$raw` `string|null` — The cookie as the request sent it.
+- `$raw` `string|null`: The cookie as the request sent it.
 
 **Returns** `list<array{type: string, text: string}>`
 
