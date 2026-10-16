@@ -22,16 +22,14 @@ final class FlashEndpoint implements Endpoint
         return true;
     }
 
-    /** The Referer's own path when it is same-origin, else '/'. */
+    /** The Referer's own path and query when it names this host (`Host`, port included), else '/'. */
     private static function backTo(Request $req): string
     {
-        $referer = $req->headers['Referer'] ?? '';
-        $parts = parse_url($referer);
-        if (!is_array($parts) || !isset($parts['path'])) {
-            return '/';
-        }
+        $parts = parse_url($req->headers['Referer'] ?? '');
         $host = $req->headers['Host'] ?? null;
-        if (isset($parts['host']) && (!is_string($host) || strcasecmp($parts['host'] . (isset($parts['port']) ? ':' . $parts['port'] : ''), $host) !== 0)) {
+        if (!is_array($parts) || !isset($parts['host']) || !is_string($host)
+            || strcasecmp($parts['host'] . (isset($parts['port']) ? ':' . $parts['port'] : ''), $host) !== 0
+            || !preg_match('#^/(?![/\\\\])#', $parts['path'] ?? '')) { // '//x' or '/\x' would leave the host
             return '/';
         }
         return $parts['path'] . (isset($parts['query']) ? '?' . $parts['query'] : '');

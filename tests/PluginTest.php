@@ -91,6 +91,15 @@ final class PluginTest extends TestCase
         $this->request('POST', '/flash/dismiss')->withHeader('Host', 'app.test')->withHeader('Referer', 'http://evil.test/steal')->send()->assertRedirect('/', 303);
     }
 
+    public function testDismissWithoutAUsableRefererGoesHome(): void
+    {
+        $this->boot();
+
+        $this->request('POST', '/flash/dismiss')->withHeader('Host', 'app.test')->send()->assertRedirect('/', 303);
+        $this->request('POST', '/flash/dismiss')->withHeader('Host', 'app.test')->withHeader('Referer', 'http://app.test')->send()->assertRedirect('/', 303);
+        $this->request('POST', '/flash/dismiss')->withHeader('Host', 'app.test')->withHeader('Referer', 'http://app.test//evil.test/x')->send()->assertRedirect('/', 303);
+    }
+
     public function testAForgedCookieIsIgnoredWhenSigningIsConfigured(): void
     {
         $this->boot();

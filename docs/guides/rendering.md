@@ -76,7 +76,7 @@ The script arms the timeouts and the focus once, when it loads. The close button
 Without the script, the close button submits its form: `POST /flash/dismiss` (the path is `FlashOptions::$dismissPath`). The endpoint drops every waiting message, clears the cookie and answers `303 See Other` back to the page:
 
 - to the path and query of the `Referer` header when it points to the same host (`Host` header, port included): `http://app.test/page?x=1` returns to `/page?x=1`;
-- to `/` when the `Referer` names another host, so the endpoint cannot be used to send visitors elsewhere.
+- to `/` in every other case: no `Referer`, one without a path, one that names another host, or a path starting with `//`, so the endpoint cannot be used to send visitors elsewhere.
 
 The endpoint is a plugin endpoint, served before routing; the form carries no CSRF token and needs none, since it only removes the visitor's own messages.
 
