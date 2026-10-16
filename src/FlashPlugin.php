@@ -22,6 +22,7 @@ final class FlashPlugin extends PluginBase implements ViewHelper, ClientAsset
         return 'flash';
     }
 
+    /** Creates the Flash service and registers it in the container. */
     public function boot(Container $container, FlashOptions $options): void
     {
         $this->options = $options;
@@ -41,6 +42,11 @@ final class FlashPlugin extends PluginBase implements ViewHelper, ClientAsset
         return [$this, new FlashEndpoint($this->flash, $this->options)];
     }
 
+    /**
+     * `flashes`: the rendered message region, see FlashRenderer::region().
+     *
+     * @return array<string, callable>
+     */
     public function helpers(): array
     {
         return ['flashes' => fn(): string => $this->renderer->region($this->flash->pull())];

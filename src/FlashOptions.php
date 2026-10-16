@@ -2,7 +2,16 @@
 
 namespace Waypoint\Flash;
 
-/** Configure via App::configure(function (FlashOptions $opts) { ... }). */
+/**
+ * Settings of the flash plugin: the cookie, the dismiss endpoint and the client behaviour.
+ *
+ * ```php
+ * $app->configure(function (FlashOptions $flash) {
+ *     $flash->timeout = 4000;
+ *     $flash->dismissLabel = 'Close';
+ * });
+ * ```
+ */
 class FlashOptions
 {
     /** Cookie carrying queued messages from one request to the next. */

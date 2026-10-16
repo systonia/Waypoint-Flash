@@ -21,7 +21,7 @@ final class PluginTest extends TestCase
         });
         if ($signed) {
             $app->configure(function (CsrfOptions $opts) {
-                $opts->secret = 'flash-test-secret';
+                $opts->secret = 'flash-test-secret-of-32-bytes-min';
             });
         }
         $app->attach([FlashController::class]);

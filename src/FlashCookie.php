@@ -17,7 +17,14 @@ final class FlashCookie
     {
     }
 
-    /** @return list<array{type: string, text: string}> */
+    /**
+     * Decodes a cookie value; an empty, malformed or wrongly signed value gives no messages.
+     *
+     * Unknown types become 'info'; entries without a string type and text are dropped.
+     *
+     * @param string|null $raw The cookie as the request sent it.
+     * @return list<array{type: string, text: string}>
+     */
     public function read(?string $raw): array
     {
         if ($raw === null || $raw === '') {
@@ -39,7 +46,11 @@ final class FlashCookie
         return $messages;
     }
 
-    /** @param list<array{type: string, text: string}> $messages */
+    /**
+     * Sets the cookie on the response, with FlashOptions::$ttl as Max-Age and FlashOptions::$cookieSecure.
+     *
+     * @param list<array{type: string, text: string}> $messages
+     */
     public function write(Response $res, array $messages): void
     {
         $payload = Base64Url::encodeJson($messages);
@@ -48,6 +59,7 @@ final class FlashCookie
         $res->withCookie($this->options->cookieName, $value, maxAge: $this->options->ttl, secure: $this->options->cookieSecure);
     }
 
+    /** Expires the cookie on the response. */
     public function clear(Response $res): void
     {
         $res->withoutCookie($this->options->cookieName);
