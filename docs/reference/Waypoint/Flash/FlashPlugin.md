@@ -70,7 +70,7 @@ public function hooks(): array
 public function helpers(): array
 ```
 
-`flashes`: the rendered message region, see FlashRenderer::region().
+`flashes`: the rendered message region as Html, see FlashRenderer::region().
 
 **Returns** `array<string, callable>`
 

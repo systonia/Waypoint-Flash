@@ -3,6 +3,7 @@
 namespace Waypoint\Flash;
 
 use Waypoint\Container;
+use Waypoint\Html;
 use Waypoint\Options\CsrfOptions;
 use Waypoint\Plugin\{ClientAsset, PluginBase, ViewHelper};
 
@@ -44,13 +45,13 @@ final class FlashPlugin extends PluginBase implements ViewHelper, ClientAsset
     }
 
     /**
-     * `flashes`: the rendered message region, see FlashRenderer::region().
+     * `flashes`: the rendered message region as Html, see FlashRenderer::region().
      *
      * @return array<string, callable>
      */
     public function helpers(): array
     {
-        return ['flashes' => fn(): string => $this->renderer->region($this->flash->pull())];
+        return ['flashes' => fn(): Html => new Html($this->renderer->region($this->flash->pull()))];
     }
 
     public function assets(): array

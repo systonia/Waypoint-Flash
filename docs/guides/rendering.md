@@ -15,7 +15,7 @@ order: 20
 </body>
 ```
 
-- `$this->flashes()` is a view helper the plugin registers. Waypoint views print `<?= ?>` as it is, so the markup arrives unchanged. The layout renders after the page's view, so it also shows messages the view queued.
+- `$this->flashes()` is a view helper the plugin registers. It returns a `Waypoint\Html`, which `<?= ?>` prints as it is, so the markup arrives unchanged; the message texts inside are escaped. The layout renders after the page's view, so it also shows messages the view queued.
 - `$this->pluginAssetTags()` prints the `<script>` and `<link rel="stylesheet">` tags for `flash.js` and `flash.css`, served content-hashed under the assets path (`/assets/flash.flash.<hash>.js`).
 - `flash.js` registers its behaviour with `Waypoint.directive()` from `waypoint.js`, so `$this->waypointJsTag()` must come before `pluginAssetTags()`.
 

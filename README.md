@@ -39,7 +39,7 @@ messages carry no HTML.
 
 - Queued messages travel in the `flash` cookie (base64url JSON, signed with `CsrfOptions::$secret`
   when configured); the next rendered page reads it and clears it.
-- `$this->flashes()` renders `<div class="wp-flashes" aria-live="polite">` with one block per
+- `$this->flashes()` returns a `Waypoint\Html`: `<div class="wp-flashes" aria-live="polite">` with one block per
   message: `role="status"`, or `role="alert"` for errors, plus a real dismiss form.
 - Without JavaScript the dismiss button posts to `/flash/dismiss`, which drops pending messages and
   returns to the referring page. With JavaScript `flash.js` removes the message in place, hides
