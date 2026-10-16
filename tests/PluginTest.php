@@ -2,7 +2,7 @@
 
 namespace Waypoint\Flash\Tests;
 
-use Waypoint\Flash\{FlashOptions, FlashPlugin};
+use Waypoint\Flash\FlashPlugin;
 use Waypoint\Options\{CsrfOptions, RendererOptions};
 use Waypoint\Testing\TestCase;
 
@@ -15,9 +15,6 @@ final class PluginTest extends TestCase
         $app->configure(function (RendererOptions $opts) {
             $opts->directory = __DIR__ . '/views';
             $opts->layout = '_Layout.php';
-        });
-        $app->configure(function (FlashOptions $opts) {
-            $opts->cookieSecure = false;
         });
         if ($signed) {
             $app->configure(function (CsrfOptions $opts) {
@@ -115,5 +112,13 @@ final class PluginTest extends TestCase
 
         $this->assertStringNotContainsString('.', $cookie);
         $this->request('GET', '/page')->withCookie('flash', $cookie)->send()->assertSee('wp-flash-success');
+    }
+
+    public function testTheCookieIsSecureExactlyOverHttps(): void
+    {
+        $this->boot();
+
+        $this->assertStringNotContainsString('Secure', $this->post('/save')->cookies()[0]);
+        $this->assertStringContainsString('Secure', $this->request('POST', '/save')->withHttps()->send()->cookies()[0]);
     }
 }

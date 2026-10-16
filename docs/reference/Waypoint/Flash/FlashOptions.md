@@ -41,10 +41,10 @@ Seconds a queued message survives unread (a redirect that never renders).
 ### $cookieSecure
 
 ```php
-public bool $cookieSecure = true;
+public ?bool $cookieSecure = null;
 ```
 
-Cookie Secure attribute; false only for HTTP-only local development.
+Cookie Secure attribute. Null (default): Secure when the request came over HTTPS.
 
 ### $dismissPath
 

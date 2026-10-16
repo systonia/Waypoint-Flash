@@ -51,7 +51,7 @@ messages carry no HTML.
 |---|---|---|
 | `cookieName` | `'flash'` | Cookie carrying queued messages. |
 | `ttl` | `120` | Seconds an unread message survives. |
-| `cookieSecure` | `true` | Cookie Secure attribute; `false` for HTTP-only local dev. |
+| `cookieSecure` | `null` | Cookie Secure attribute; `null` follows the request (`Request::$https`). |
 | `dismissPath` | `'/flash/dismiss'` | The no-JS dismiss endpoint. |
 | `timeout` | `6000` | Milliseconds until the client hides a message; `0` keeps it. Errors always stay. |
 | `dismissLabel` | `'Dismiss'` | `aria-label` of the dismiss button. |

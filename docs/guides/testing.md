@@ -9,7 +9,7 @@ Waypoint's `TestCase` sends requests through the app without a server, so the pl
 ```php
 <?php
 
-use Waypoint\Flash\{FlashOptions, FlashPlugin};
+use Waypoint\Flash\FlashPlugin;
 use Waypoint\Options\{CsrfOptions, RendererOptions};
 use Waypoint\Testing\TestCase;
 
@@ -20,11 +20,10 @@ final class ProfileFlashTest extends TestCase
         parent::setUp();
         $app = $this->app();
         $app->plugin(new FlashPlugin());
-        $app->configure(function (RendererOptions $renderer, CsrfOptions $csrf, FlashOptions $flash) {
+        $app->configure(function (RendererOptions $renderer, CsrfOptions $csrf) {
             $renderer->directory = __DIR__ . '/../views';
             $renderer->layout = '_Layout.php';
             $csrf->secret = str_repeat('t', 32);
-            $flash->cookieSecure = false;
         });
         $app->attach([ProfileController::class]);
     }

@@ -9,11 +9,9 @@ order: 30
 [`FlashOptions`](../reference/Waypoint/Flash/FlashOptions.md) is set with `$app->configure()`, like every Options class:
 
 ```php
-use Waypoint\Environment;
 use Waypoint\Flash\FlashOptions;
 
-$app->configure(function (FlashOptions $flash, Environment $env) {
-    $flash->cookieSecure = $env->get('APP_ENV') !== 'local';
+$app->configure(function (FlashOptions $flash) {
     $flash->timeout = 4000;
     $flash->dismissLabel = 'Close';
 });
@@ -23,12 +21,12 @@ $app->configure(function (FlashOptions $flash, Environment $env) {
 |---|---|---|
 | `cookieName` | `'flash'` | name of the cookie that carries waiting messages |
 | `ttl` | `120` | seconds a waiting message survives (the cookie's `Max-Age`) |
-| `cookieSecure` | `true` | the cookie's `Secure` attribute; set `false` only for local development over plain HTTP |
+| `cookieSecure` | `null` | the cookie's `Secure` attribute; `null` sets it exactly when the request came over HTTPS (`Request::$https`) |
 | `dismissPath` | `'/flash/dismiss'` | path of the no-JavaScript close endpoint (`POST`) |
 | `timeout` | `6000` | milliseconds until the client script hides a message; `0` keeps every message. Errors are never hidden |
 | `dismissLabel` | `'Dismiss'` | `aria-label` of the close button, for screen readers |
 
-With `cookieSecure = true` a browser keeps the cookie to HTTPS, so on a site served over plain HTTP messages that need a redirect never arrive. Messages shown in the same request still work.
+With `cookieSecure = true` a browser keeps the cookie to HTTPS, so on a site served over plain HTTP messages that need a redirect never arrive. Messages shown in the same request still work. Behind a proxy that ends TLS, the request counts as HTTPS only when Waypoint trusts that proxy, so set `true` there if it does not.
 
 `dismissLabel` is the only text the plugin itself puts on the page. An app with several languages sets it per deployment, or translates it in a layout of its own.
 

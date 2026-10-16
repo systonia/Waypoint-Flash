@@ -43,7 +43,7 @@ and render the messages in the layout:
 require __DIR__ . '/vendor/autoload.php';
 
 use Waypoint\Attributes\{Controller, Get, Inject, NotBlank, Post};
-use Waypoint\Flash\{Flash, FlashOptions, FlashPlugin};
+use Waypoint\Flash\{Flash, FlashPlugin};
 use Waypoint\FromArray;
 use Waypoint\Http\{Redirect, Request, View};
 use Waypoint\Options\{CsrfOptions, RendererOptions};
@@ -84,11 +84,10 @@ final class ProfileController
 
 $app = Waypoint::create();
 $app->plugin(new FlashPlugin());
-$app->configure(function (RendererOptions $renderer, CsrfOptions $csrf, FlashOptions $flash) {
+$app->configure(function (RendererOptions $renderer, CsrfOptions $csrf) {
     $renderer->directory = __DIR__ . '/views';
     $renderer->layout = '_Layout.php';
     $csrf->secret = 'dev-secret-of-at-least-32-bytes-long';   // from Environment in a real app
-    $flash->cookieSecure = false;   // local development over plain HTTP
 });
 $app->attach([ProfileController::class]);
 $app->serve();
