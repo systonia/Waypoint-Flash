@@ -50,6 +50,8 @@ $this->flash->add($result->ok ? 'success' : 'error', $result->message);
 
 Several messages can be queued in one request; they are shown in the order they were queued, after any that were still waiting from earlier requests.
 
+The queue belongs to the request. `Flash` is one shared service, but it keeps the messages in a `Waypoint\Support\FiberLocal`, so under Tenma, where one worker runs requests concurrently, a request that waits never sees or sends the messages of another.
+
 ## Text, not HTML
 
 The text is escaped when it is rendered, so user input is safe in a message and markup shows as text:

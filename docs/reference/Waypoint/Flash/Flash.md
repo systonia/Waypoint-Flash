@@ -25,6 +25,9 @@ Messages travel in a cookie (FlashMiddleware reads and writes it), so no
 session is needed. A message queued and rendered in the same request is
 shown immediately. pull() hands the messages out exactly once.
 
+One shared service, but the messages belong to the request: they are kept in a FiberLocal, so
+requests a worker runs interleaved never see each other's messages.
+
 ## Constants
 
 ### TYPES
@@ -36,6 +39,12 @@ public const TYPES = ['success', 'info', 'warning', 'error'];
 The message types; each is also a CSS class suffix (`wp-flash-success`).
 
 ## Methods
+
+### __construct()
+
+```php
+public function __construct()
+```
 
 ### success()
 

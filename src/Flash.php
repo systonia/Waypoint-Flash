@@ -2,6 +2,8 @@
 
 namespace Waypoint\Flash;
 
+use Waypoint\Support\FiberLocal;
+
 /**
  * The message queue: queue a message now, show it on the next rendered page.
  *
@@ -16,19 +18,22 @@ namespace Waypoint\Flash;
  * Messages travel in a cookie (FlashMiddleware reads and writes it), so no
  * session is needed. A message queued and rendered in the same request is
  * shown immediately. pull() hands the messages out exactly once.
+ *
+ * One shared service, but the messages belong to the request: they are kept in a FiberLocal, so
+ * requests a worker runs interleaved never see each other's messages.
  */
 final class Flash
 {
     /** The message types; each is also a CSS class suffix (`wp-flash-success`). */
     public const TYPES = ['success', 'info', 'warning', 'error'];
 
-    /** @var list<array{type: string, text: string}> Arrived with this request's cookie. */
-    private array $incoming = [];
+    /** @var FiberLocal<array{incoming: list<array{type: string, text: string}>, queued: list<array{type: string, text: string}>, pulled: bool}> */
+    private FiberLocal $state;
 
-    /** @var list<array{type: string, text: string}> Queued during this request. */
-    private array $queued = [];
-
-    private bool $pulled = false;
+    public function __construct()
+    {
+        $this->state = new FiberLocal();
+    }
 
     /**
      * Queues a success message.
@@ -78,7 +83,9 @@ final class Flash
      */
     public function add(string $type, string $text): void
     {
-        $this->queued[] = ['type' => in_array($type, self::TYPES, true) ? $type : 'info', 'text' => $text];
+        $state = $this->state();
+        $state['queued'][] = ['type' => in_array($type, self::TYPES, true) ? $type : 'info', 'text' => $text];
+        $this->state->set($state);
     }
 
     /**
@@ -90,9 +97,7 @@ final class Flash
      */
     public function load(array $messages): void
     {
-        $this->incoming = $messages;
-        $this->queued = [];
-        $this->pulled = false;
+        $this->state->set(['incoming' => $messages, 'queued' => [], 'pulled' => false]);
     }
 
     /**
@@ -104,10 +109,8 @@ final class Flash
      */
     public function pull(): array
     {
-        $messages = [...$this->incoming, ...$this->queued];
-        $this->incoming = [];
-        $this->queued = [];
-        $this->pulled = $this->pulled || $messages !== [];
+        $messages = $this->pending();
+        $this->state->set(['incoming' => [], 'queued' => [], 'pulled' => $this->wasPulled() || $messages !== []]);
         return $messages;
     }
 
@@ -118,12 +121,19 @@ final class Flash
      */
     public function pending(): array
     {
-        return [...$this->incoming, ...$this->queued];
+        $state = $this->state();
+        return [...$state['incoming'], ...$state['queued']];
     }
 
     /** True once pull() handed something out in this request (the cookie can be cleared). */
     public function wasPulled(): bool
     {
-        return $this->pulled;
+        return $this->state()['pulled'];
+    }
+
+    /** @return array{incoming: list<array{type: string, text: string}>, queued: list<array{type: string, text: string}>, pulled: bool} */
+    private function state(): array
+    {
+        return $this->state->get() ?? ['incoming' => [], 'queued' => [], 'pulled' => false];
     }
 }
