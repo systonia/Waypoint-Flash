@@ -14,12 +14,12 @@ $app->plugin(new Waypoint\Flash\FlashPlugin());   // before attach()
 
 In the layout:
 
-```php
+```html
 <body>
-    <?= $this->flashes() ?>
-    <main><?= $content ?></main>
-    <?= $this->waypointJsTag() ?>
-    <?= $this->pluginAssetTags() ?>
+    {{ $this->flashes() }}
+    <main>{{ $content }}</main>
+    {{ $this->waypointJsTag() }}
+    {{ $this->pluginAssetTags() }}
 ```
 
 ## Usage

@@ -22,12 +22,12 @@ $app->plugin(new FlashPlugin());
 
 and render the messages in the layout:
 
-```php
+```html
 <body>
-    <?= $this->flashes() ?>
-    <main><?= $content ?></main>
-    <?= $this->waypointJsTag() ?>
-    <?= $this->pluginAssetTags() ?>
+    {{ $this->flashes() }}
+    <main>{{ $content }}</main>
+    {{ $this->waypointJsTag() }}
+    {{ $this->pluginAssetTags() }}
 </body>
 ```
 
@@ -95,7 +95,7 @@ $app->serve();
 
 `views/_Layout.php`:
 
-```php
+```html
 <!doctype html>
 <html lang="en">
 <head>
@@ -103,20 +103,20 @@ $app->serve();
     <title>Profile</title>
 </head>
 <body>
-    <?= $this->flashes() ?>
-    <main><?= $content ?></main>
-    <?= $this->waypointJsTag() ?>
-    <?= $this->pluginAssetTags() ?>
+    {{ $this->flashes() }}
+    <main>{{ $content }}</main>
+    {{ $this->waypointJsTag() }}
+    {{ $this->pluginAssetTags() }}
 </body>
 </html>
 ```
 
 `views/Profile.php`:
 
-```php
+```html
 <h1>Profile</h1>
 <form method="post" action="/profile">
-    <?= $this->csrf->field() ?>
+    {{ $this->csrf->field() }}
     <label>Name <input name="name"></label>
     <button>Save</button>
 </form>
