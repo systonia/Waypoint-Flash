@@ -28,7 +28,7 @@ $app->configure(function (FlashOptions $flash) {
 
 With `cookieSecure = true` a browser keeps the cookie to HTTPS, so on a site served over plain HTTP messages that need a redirect never arrive. Messages shown in the same request still work. Behind a proxy that ends TLS, the request counts as HTTPS only when Waypoint trusts that proxy, so set `true` there if it does not.
 
-`dismissLabel` is the only text the plugin itself puts on the page. An app with several languages sets it per deployment, or translates it in a layout of its own.
+`dismissLabel` is the only text the plugin itself puts on the page. An app with several languages, like the bakery in English and German, sets it per deployment, or translates it in a layout of its own.
 
 Change `dismissPath` when the default collides with a route of the app; the endpoint is checked before routing and would otherwise answer `POST /flash/dismiss` itself.
 
@@ -45,20 +45,23 @@ It is set with `Path=/`, `HttpOnly` and `SameSite=Lax`, so scripts cannot read i
 The value is the list of messages as JSON, encoded as base64url:
 
 ```text
-flash=W3sidHlwZSI6InN1Y2Nlc3MiLCJ0ZXh0IjoiU2F2ZWQsIEFkYS4ifV0.1Wf5_Spww9oIQzmIokmy2CA6R06_U9grcPkEnPAQmtc
-       └ [{"type":"success","text":"Saved, Ada."}]              └ HMAC-SHA256 signature
+flash=W3sidHlwZSI6InN1Y2Nlc3MiLCJ0ZXh0IjoiVGhhbmsgeW91LCBNaWEhIFlvdXIgb3JkZXIgaXMgcmVzZXJ2ZWQuIn1d.scmzRBl9CE3Mvpet56MKNzYTeGFcCaffnM-MDFBlpoU
+       └ [{"type":"success","text":"Thank you, Mia! Your order is reserved."}]               └ HMAC-SHA256 signature
 ```
 
 ## Signing
 
 When `CsrfOptions::$secret` is set, the value carries a signature after a `.`: base64url HMAC-SHA256 of the payload with that secret. A cookie with a missing or wrong signature is ignored, so nobody can plant a message that looks like it came from the app, for example by setting the cookie on a shared parent domain.
 
+The bakery example app reads it from its environment (from `app.php`, shortened):
+
 ```php
 use Waypoint\Environment;
 use Waypoint\Options\CsrfOptions;
 
-$app->configure(function (CsrfOptions $csrf, Environment $env) {
-    $csrf->secret = (string) $env->get('CSRF_SECRET');   // at least 32 bytes, e.g. bin2hex(random_bytes(32))
+$env = $app->get(Environment::class);
+$app->configure(function (CsrfOptions $csrf) use ($env) {
+    $csrf->secret = $env->string('CSRF_SECRET');   // at least 32 bytes, e.g. bin2hex(random_bytes(32))
 });
 ```
 

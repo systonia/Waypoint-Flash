@@ -6,14 +6,21 @@ order: 20
 
 ## The layout
 
+The bakery example app's shop layout, shortened from `views/_Layout.php`:
+
 ```html
-<body>
-    {{ $this->flashes() }}
-    <main>{{ $content }}</main>
-    {{ $this->waypointJsTag() }}
-    {{ $this->pluginAssetTags() }}
+<body class="min-h-screen bg-stone-50 text-stone-900">
+{{ $this->flashes() }}
+<header class="border-b border-stone-200 bg-white">
+    ...
+</header>
+<main class="mx-auto max-w-5xl px-4 py-8">{{ $content }}</main>
+{{ $this->waypointJsTag() }}
+{{ $this->pluginAssetTags() }}
 </body>
 ```
+
+Its back office layout, `views/_Backoffice.php`, calls `$this->flashes()` the same way, so the welcome after signing in shows there.
 
 - `$this->flashes()` is a view helper the plugin registers. It returns a `Waypoint\Html`, which `{{ }}` prints as it is, so the markup arrives unchanged; the message texts inside are escaped. The layout renders after the page's view, so it also shows messages the view queued.
 - `$this->pluginAssetTags()` prints the `<script>` and `<link rel="stylesheet">` tags for `flash.js` and `flash.css`, served content-hashed under the assets path (`/assets/flash.flash.<hash>.js`).
@@ -26,7 +33,7 @@ Put `$this->flashes()` where messages belong on every page, usually above the ma
 ```html
 <div class="wp-flashes" aria-live="polite">
   <div class="wp-flash wp-flash-success" role="status" data-timeout="6000">
-    <span class="wp-flash-text">Saved, Ada.</span>
+    <span class="wp-flash-text">Thank you, Mia! Your order is reserved.</span>
     <form method="post" action="/flash/dismiss" class="wp-flash-dismiss" wp-dismiss>
       <button type="submit" aria-label="Dismiss">&times;</button>
     </form>
@@ -55,10 +62,18 @@ Put `$this->flashes()` where messages belong on every page, usually above the ma
 
 `flash.css` gives each type a light background, a border and a text colour, and draws the close button as a plain `×`. `pluginAssetTags()` usually sits at the end of the body, after the app's own stylesheets, so a rule of the same specificity in the app loses to `flash.css`. Make the app's rules more specific, for example by prefixing them with the region class (or `body` for the region itself):
 
+The bakery places its messages above the page (from `assets/app.css`):
+
 ```css
-body .wp-flashes { position: fixed; top: 16px; right: 16px; z-index: 10; width: min(360px, calc(100vw - 32px)); }
-.wp-flashes .wp-flash { margin: 0 0 8px; box-shadow: 0 4px 12px rgb(0 0 0 / 0.12); }
-.wp-flashes .wp-flash-success { background: #e8f5e9; border-color: #66bb6a; color: #1b5e20; }
+/* Flash messages sit above the page, in the bakery's colours */
+body .wp-flashes { position: fixed; top: 1rem; right: 1rem; z-index: 10; width: min(380px, calc(100vw - 2rem)); }
+.wp-flashes .wp-flash { margin: 0 0 0.5rem; box-shadow: 0 4px 12px rgb(0 0 0 / 0.12); }
+```
+
+Colours per type follow the same pattern:
+
+```css
+.wp-flashes .wp-flash-success { background: #fef3c7; border-color: #d97706; color: #78350f; }
 ```
 
 ## The client script
@@ -75,7 +90,7 @@ The script arms the timeouts and the focus once, when it loads. The close button
 
 Without the script, the close button submits its form: `POST /flash/dismiss` (the path is `FlashOptions::$dismissPath`). The endpoint drops every waiting message, clears the cookie and answers `303 See Other` back to the page:
 
-- to the path and query of the `Referer` header when it points to the same host (`Host` header, port included): `http://app.test/page?x=1` returns to `/page?x=1`;
+- to the path and query of the `Referer` header when it points to the same host (`Host` header, port included): `http://sonnenkorn.test/products/croissant?lang=de` returns to `/products/croissant?lang=de`;
 - to `/` in every other case: no `Referer`, one without a path, one that names another host, or a path starting with `//`, so the endpoint cannot be used to send visitors elsewhere.
 
 The endpoint is a plugin endpoint, served before routing; the form carries no CSRF token and needs none, since it only removes the visitor's own messages.

@@ -11,8 +11,8 @@ use Waypoint\Support\FiberLocal;
  * #[Inject]
  * private Flash $flash;
  *
- * $this->flash->success('Profile updated.');
- * return new Redirect('/profile');
+ * $this->flash->success("Thank you, {$order->customerName}! Your order is reserved.");
+ * return new Redirect("/orders/{$order->code}", 303);
  * ```
  *
  * Messages travel in a cookie (FlashMiddleware reads and writes it), so no

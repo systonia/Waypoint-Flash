@@ -12,24 +12,33 @@ in place.
 $app->plugin(new Waypoint\Flash\FlashPlugin());   // before attach()
 ```
 
-In the layout:
+In the layout (shortened from `views/_Layout.php` of the [bakery example app](https://github.com/systonia/Waypoint-Bakery)):
 
 ```html
-<body>
-    {{ $this->flashes() }}
-    <main>{{ $content }}</main>
-    {{ $this->waypointJsTag() }}
-    {{ $this->pluginAssetTags() }}
+<body class="min-h-screen bg-stone-50 text-stone-900">
+{{ $this->flashes() }}
+<header>...</header>
+<main class="mx-auto max-w-5xl px-4 py-8">{{ $content }}</main>
+{{ $this->waypointJsTag() }}
+{{ $this->pluginAssetTags() }}
+</body>
 ```
 
 ## Usage
+
+The bakery thanks its customer after the checkout and sends them on to their order (from `src/Controllers/ShopController.php`):
 
 ```php
 #[Inject]
 private Waypoint\Flash\Flash $flash;
 
-$this->flash->success('Profile updated.');   // also info(), warning(), error()
-return new Redirect('/profile');
+#[Get('/orders/{code}/thanks')]
+public function thanks(string $code): Redirect
+{
+    $order = $this->orders->byCode($code) ?? throw new NotFoundException('No such order');
+    $this->flash->success("Thank you, {$order->customerName}! Your order is reserved.");   // also info(), warning(), error()
+    return new Redirect("/orders/{$order->code}", 303);
+}
 ```
 
 A message queued while rendering a page (no redirect) is shown on that page. Text is escaped;

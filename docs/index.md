@@ -4,7 +4,7 @@ description: "Flash messages for Waypoint: queue a message, redirect, show it on
 order: 1
 ---
 
-Waypoint Flash adds one-time messages to a [Waypoint](https://github.com/systonia/Waypoint) app: a controller queues "Profile updated." and redirects, and the next page that renders shows the message once. Messages travel in a cookie, so the app needs no session. The markup works without JavaScript; with the bundled client script, messages hide on their own and close in place.
+Waypoint Flash adds one-time messages to a [Waypoint](https://github.com/systonia/Waypoint) app: a controller queues "Thank you, Mia! Your order is reserved." and redirects, and the next page that renders shows the message once. Messages travel in a cookie, so the app needs no session. The markup works without JavaScript; with the bundled client script, messages hide on their own and close in place.
 
 ## Install
 
@@ -24,16 +24,18 @@ and render the messages in the layout:
 
 ```html
 <body>
-    {{ $this->flashes() }}
-    <main>{{ $content }}</main>
-    {{ $this->waypointJsTag() }}
-    {{ $this->pluginAssetTags() }}
+{{ $this->flashes() }}
+<main>{{ $content }}</main>
+{{ $this->waypointJsTag() }}
+{{ $this->pluginAssetTags() }}
 </body>
 ```
 
 `$this->flashes()` prints the messages. `pluginAssetTags()` adds the plugin's CSS and script; the script builds on `waypoint.js`, so `waypointJsTag()` comes first.
 
 ## A first app
+
+A small order form for Sonnenkorn, a made-up bakery: the customer leaves a name, the app thanks them and redirects. The [bakery example app](https://github.com/systonia/Waypoint-Bakery) does the same in `ShopController::thanks()` after its checkout.
 
 `index.php`:
 
@@ -49,7 +51,7 @@ use Waypoint\Http\{Redirect, Request, View};
 use Waypoint\Options\{CsrfOptions, RendererOptions};
 use Waypoint\Waypoint;
 
-final class ProfileForm
+final class OrderForm
 {
     use FromArray;
 
@@ -57,28 +59,28 @@ final class ProfileForm
     public string $name = '';
 }
 
-#[Controller('/profile')]
-final class ProfileController
+#[Controller('/order')]
+final class OrderController
 {
     #[Inject]
     private Flash $flash;
 
     #[Get('')]
-    public function show(): View
+    public function form(): View
     {
-        return new View('Profile');
+        return new View('Order');
     }
 
     #[Post('')]
-    public function save(Request $req): Redirect
+    public function place(Request $req): Redirect
     {
-        $form = new ProfileForm($req->body());
+        $form = new OrderForm($req->body());
         if (!$form->isValid) {
             $this->flash->error('Please enter your name.');
-            return new Redirect('/profile', 303);
+            return new Redirect('/order', 303);
         }
-        $this->flash->success("Saved, {$form->name}.");
-        return new Redirect('/profile', 303);
+        $this->flash->success("Thank you, {$form->name}! Your order is reserved.");
+        return new Redirect('/order', 303);
     }
 }
 
@@ -89,7 +91,7 @@ $app->configure(function (RendererOptions $renderer, CsrfOptions $csrf) {
     $renderer->layout = '_Layout.php';
     $csrf->secret = 'dev-secret-of-at-least-32-bytes-long';   // from Environment in a real app
 });
-$app->attach([ProfileController::class]);
+$app->attach([OrderController::class]);
 $app->serve();
 ```
 
@@ -100,32 +102,34 @@ $app->serve();
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Profile</title>
+    <title>Sonnenkorn</title>
 </head>
 <body>
-    {{ $this->flashes() }}
-    <main>{{ $content }}</main>
-    {{ $this->waypointJsTag() }}
-    {{ $this->pluginAssetTags() }}
+{{ $this->flashes() }}
+<main>{{ $content }}</main>
+{{ $this->waypointJsTag() }}
+{{ $this->pluginAssetTags() }}
 </body>
 </html>
 ```
 
-`views/Profile.php`:
+`views/Order.php`:
 
 ```html
-<h1>Profile</h1>
-<form method="post" action="/profile">
+<h1>
+    Order at Sonnenkorn
+</h1>
+<form method="post" action="/order">
     {{ $this->csrf->field() }}
     <label>Name <input name="name"></label>
-    <button>Save</button>
+    <button>Reserve</button>
 </form>
 ```
 
-Run it with `tenma index.php` (or `php -S localhost:8080 index.php`) and open `/profile`. Saving answers `303 See Other` with a `flash` cookie; the page it redirects to shows
+Run it with `tenma index.php` (or `php -S localhost:8080 index.php`) and open `/order`. Sending the form answers `303 See Other` with a `flash` cookie; the page it redirects to shows
 
 ```html
-<div class="wp-flashes" aria-live="polite"><div class="wp-flash wp-flash-success" role="status" data-timeout="6000"><span class="wp-flash-text">Saved, Ada.</span><form method="post" action="/flash/dismiss" class="wp-flash-dismiss" wp-dismiss><button type="submit" aria-label="Dismiss">&times;</button></form></div></div>
+<div class="wp-flashes" aria-live="polite"><div class="wp-flash wp-flash-success" role="status" data-timeout="6000"><span class="wp-flash-text">Thank you, Mia! Your order is reserved.</span><form method="post" action="/flash/dismiss" class="wp-flash-dismiss" wp-dismiss><button type="submit" aria-label="Dismiss">&times;</button></form></div></div>
 ```
 
 and clears the cookie. Reloading shows nothing: the message was shown once. After six seconds the script removes it; an empty name gives an error message instead, which stays until it is closed.
