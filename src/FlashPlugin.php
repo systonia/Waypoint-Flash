@@ -51,7 +51,7 @@ final class FlashPlugin extends PluginBase implements ViewHelper, ClientAsset
      */
     public function helpers(): array
     {
-        return ['flashes' => fn(): Html => new Html($this->renderer->region($this->flash->pull()))];
+        return ['flashes' => fn (): Html => new Html($this->renderer->region($this->flash->pull()))];
     }
 
     public function assets(): array
