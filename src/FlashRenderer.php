@@ -10,19 +10,11 @@ final class FlashRenderer
     }
 
     /**
-     * The live region the layout renders: `<div class="wp-flashes" aria-live="polite">` with the messages inside.
+     * The live region the layout renders: `<div class="wp-flashes" aria-live="polite">` with one
+     * block per message inside, each with its dismiss form.
      * @param list<array{type: string, text: string}> $messages
      */
     public function region(array $messages): string
-    {
-        return sprintf('<div class="wp-flashes" aria-live="polite">%s</div>', $this->messages($messages));
-    }
-
-    /**
-     * One block per message, each with its dismiss form.
-     * @param list<array{type: string, text: string}> $messages
-     */
-    private function messages(array $messages): string
     {
         $html = '';
         foreach ($messages as $message) {
@@ -38,6 +30,6 @@ final class FlashRenderer
                 htmlspecialchars($this->options->dismissLabel, ENT_QUOTES)
             );
         }
-        return $html;
+        return '<div class="wp-flashes" aria-live="polite">' . $html . '</div>';
     }
 }

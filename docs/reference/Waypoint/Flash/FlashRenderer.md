@@ -31,7 +31,8 @@ public function __construct(private \Waypoint\Flash\FlashOptions $options)
 public function region(array $messages): string
 ```
 
-The live region the layout renders: `<div class="wp-flashes" aria-live="polite">` with the messages inside.
+The live region the layout renders: `<div class="wp-flashes" aria-live="polite">` with one
+block per message inside, each with its dismiss form.
 
 **Parameters**
 
